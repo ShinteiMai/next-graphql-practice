@@ -9,6 +9,8 @@ import connectRedis from "connect-redis";
 import { redis } from "./redis";
 import cors from "cors";
 import { createSchema } from "./utils/createSchema";
+import { graphqlUploadExpress } from "graphql-upload";
+// import { graphqlHTTP } from "express-graphql";
 
 const main = async () => {
   await createConnection();
@@ -18,6 +20,7 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema,
     context: ({ req, res }: any) => ({ req, res }),
+    uploads: false,
   });
 
   const app = Express();
@@ -46,9 +49,14 @@ const main = async () => {
     })
   );
 
+  app.use(
+    "/graphql",
+    graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 })
+  );
+
   apolloServer.applyMiddleware({ app, cors: false });
 
-  app.listen(4000, () => {
+  app.listen(4001, () => {
     console.log(`Server started on http://localhost:4000/graphql`);
   });
 };
