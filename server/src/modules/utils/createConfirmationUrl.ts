@@ -1,4 +1,4 @@
-import { redis } from "../redis";
+import { redis } from "../../redis";
 import { v4 as uuid } from "uuid";
 import { confirmUserPrefix } from "../constants/confirmationPrefix";
 
